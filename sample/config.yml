@@ -1,0 +1,27 @@
+version: 2
+
+tests:
+  Some app with 2phase:
+    - obfuscator:
+        name: ixguard
+        application: sample/standard/input
+        config: sample/standard/ixguard.yml
+    - appium:
+    - autoconf:
+    - obfuscator:
+        name: ixguard
+    - appium:
+  
+  Simple:
+    - obfuscator:
+        name: ixguard
+        application: some/app.ipa
+        config: some/config.yml
+    - appium:
+  
+  SimpleTwo:
+    - obfuscator:
+        name: ixguard
+        application: some/app.ipa
+        config: some/config.yml
+    - appium:

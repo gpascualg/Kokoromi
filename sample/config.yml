@@ -1,12 +1,18 @@
 version: 2
 
 config:
+  appium:
+    server: localhost
+    caps:
+      platformName: ios
+      app: com.example.app
+
   report:
     skip:
       - Simple
   
   visualizer:
-     enabled: true
+     enabled: false 
 
 tests:
   Some app with 2phase:
@@ -15,10 +21,12 @@ tests:
         application: sample/standard/input
         config: sample/standard/ixguard.yml
     - appium:
+        test: tests/appium_test.py
     - autoconf:
     - obfuscator:
         name: ixguard
     - appium:
+        test: tests/appium_test.py
   
   Simple:
     - obfuscator:
@@ -26,6 +34,11 @@ tests:
         application: some/app.ipa
         config: some/config.yml
     - appium:
+        test: tests/appium_test.py
+
+  Python:
+    - python:
+        test: tests/python_test.py
   
   SimpleTwo:
     - obfuscator:
@@ -33,3 +46,5 @@ tests:
         application: some/app.ipa
         config: some/config.yml
     - appium:
+        test: tests/appium_test.py
+        application_id: some.other.app

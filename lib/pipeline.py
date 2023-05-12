@@ -24,8 +24,9 @@ class Pipeline:
         stage = self.stages[name](self, config)
         return stage
 
-    def stage_config(self, stage: Stage):
-        return self.config.get(stage.class_name(), {})
+    def stage_config(self, stage: Union[Stage, str]):
+        class_name = stage if isinstance(stage, str) else stage.class_name()
+        return self.config.get(class_name, {})
 
     def execute(self):
         with open(self.config_path, 'r') as fp:
@@ -64,6 +65,7 @@ class Pipeline:
             logging.info(" > Running pipeline")
             inputs = {}
             for stage in self.current_stages:
+                self.current_stage = stage
                 inputs, result = stage(inputs)
                 if not stage.was_successful(result):
                     break

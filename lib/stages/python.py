@@ -16,10 +16,10 @@ BASE_PATH = os.path.realpath(os.path.join(
 
 class Stage(stage.Stage):
     def __init__(self, pipe, config):
-        super().__init__('Appium', pipe, config, ('test', 'application',), ('results',))
+        super().__init__('Python', pipe, config, ('test',), ('results',))
 
     def call(self, inputs):
         test = os.path.join(BASE_PATH, inputs['test'])
         plugin = Plugin()
-        pytest.main([test], plugins=[plugin,  'lib.plugins.appium_fixtures'])
+        pytest.main([test], plugins=[plugin])
         return {'results': plugin.passed_tests}, True

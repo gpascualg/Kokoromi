@@ -3,6 +3,7 @@ import sys
 from . import appium
 from . import autoconf
 from . import obfuscator
+from . import python
 from . import report
 from . import visualizer
 

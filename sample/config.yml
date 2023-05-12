@@ -1,5 +1,7 @@
 version: 2
 
+# Global configuration that is test-independent.
+# Can be used to toggle features, setup connection information, and similar.
 config:
   appium:
     server: localhost
@@ -16,35 +18,44 @@ config:
 
 tests:
   Some app with 2phase:
-    - obfuscator:
-        name: ixguard
-        application: sample/standard/input
-        config: sample/standard/ixguard.yml
-    - appium:
+    # Config defines common values for all stages of a type for this test.
+    config:
+      appium: 
+        application_id: some.company.app
         test: tests/appium_test.py
-    - autoconf:
-    - obfuscator:
+      obfuscator:
         name: ixguard
-    - appium:
-        test: tests/appium_test.py
+    # The actual pipeline defines the order in which stages are called.
+    # Any configuration provided here overrides the stage config.
+    pipe:
+      - obfuscator:
+          application: sample/standard/input
+          config: sample/standard/ixguard.yml
+      - appium:
+      - autoconf:
+      - obfuscator:
+      - appium:
   
   Simple:
-    - obfuscator:
-        name: ixguard
-        application: some/app.ipa
-        config: some/config.yml
-    - appium:
-        test: tests/appium_test.py
+    pipe:
+      - obfuscator:
+          name: ixguard
+          application: some/app.ipa
+          config: some/config.yml
+      - appium:
+          test: tests/appium_test.py
 
   Python:
-    - python:
-        test: tests/python_test.py
+    pipe:
+      - python:
+          test: tests/python_test.py
   
   SimpleTwo:
-    - obfuscator:
-        name: ixguard
-        application: some/app.ipa
-        config: some/config.yml
-    - appium:
-        test: tests/appium_test.py
-        application_id: some.other.app
+    pipe:
+      - obfuscator:
+          name: ixguard
+          application: some/app.ipa
+          config: some/config.yml
+      - appium:
+          test: tests/appium_test.py
+          application_id: some.other.app

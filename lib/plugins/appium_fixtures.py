@@ -15,6 +15,9 @@ def _setup_appium_resources(request):
     if hasattr(request.cls, 'caps'):
         caps.update(request.cls.caps())
 
+    yield
+    return
+
     request.cls.driver = webdriver.Remote(server, caps)
     assert request.cls.driver, "No driver could be built"
     yield

@@ -1,6 +1,9 @@
+from appium import webdriver
 from ..pipeline import Pipeline
 
 class AppiumTest:
+    driver : webdriver.Remote = None
+
     @staticmethod
     def caps():
         config = Pipeline.instance().current_stage.config

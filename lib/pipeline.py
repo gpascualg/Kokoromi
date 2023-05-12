@@ -1,6 +1,7 @@
 from __future__ import annotations
-import yaml
+import copy
 import logging
+import yaml
 
 class Pipeline:
     INSTANCE : Optional[Pipeline] = None
@@ -18,9 +19,15 @@ class Pipeline:
     def instance() -> Pipeline:
         return Pipeline.INSTANCE
 
-    def parse_stage(self, stage_info):
+    def parse_stage(self, stage_info, test_config):
         name = next(iter(stage_info.keys()))
-        config = stage_info[name] or {}
+
+        # Config is based on test config with local overrides.
+        config = copy.deepcopy(test_config.get(name, {}))
+        config.update(stage_info[name] or {})
+        print(stage_info)
+
+        # Create and done.
         stage = self.stages[name](self, config)
         return stage
 
@@ -42,11 +49,14 @@ class Pipeline:
         for stage in self.stages.values():
             stage.start()
 
-        for test_name, test_stages in config['tests'].items():
-            # Constuct the list of stages
+        for test_name, test_data in config['tests'].items():
+            # Get local data, if any.
+            test_config = test_data.get('config', {})
+
+            # Constuct the list of stages.
             logging.info("Executing test `%s`", test_name)
             self.current_test_name = test_name
-            self.current_stages = [self.parse_stage(x) for x in test_stages]
+            self.current_stages = [self.parse_stage(x, test_config) for x in test_data['pipe']]
             self.all_pipes.append((test_name, self.current_stages))
             logging.info(" > %s", " > ".join(x.name for x in self.current_stages))
 

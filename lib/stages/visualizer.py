@@ -19,6 +19,10 @@ class Stage(stage.Stage):
 
     @classmethod
     def finish(cls):
+        config = Pipeline.instance().stage_config(Stage)
+        if not config.get('enabled'):
+            return
+
         with Diagram("Kokoromi", show=True, direction="TB"):
             with Cluster("Pipeline"):
                 pipeline = ELB()
@@ -29,14 +33,14 @@ class Stage(stage.Stage):
                     for idx, stage in enumerate(stages):
                         with Cluster(f"{stage.name}_{idx}"):
                             nodes.append(Action(
-                                width="2", 
-                                height="1", 
-                                imagescale="false", 
+                                width="2",
+                                height="1",
+                                imagescale="false",
                                 fixedsize="true"))
 
                             [Integrations(
-                                plugin.name, 
-                                height="0.4", 
+                                plugin.name,
+                                height="0.4",
                                 width="0.4") for plugin in stage.plugins]
 
                     # Connect one stage to the next

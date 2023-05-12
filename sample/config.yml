@@ -1,5 +1,13 @@
 version: 2
 
+config:
+  report:
+    skip:
+      - Simple
+  
+  visualizer:
+     enabled: true
+
 tests:
   Some app with 2phase:
     - obfuscator:

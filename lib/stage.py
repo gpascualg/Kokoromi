@@ -2,7 +2,9 @@ from __future__ import annotations
 from typing import Sequence
 import itertools as it
 import copy
+import inspect
 import logging
+import os
 
 from .plugin import Plugin
 
@@ -15,6 +17,12 @@ class Stage:
         self.base_outputs = base_outputs
         self.has_run = False
         self.plugins : List[Plugin] = []
+
+    @classmethod
+    def class_name(cls):
+        cls_name = inspect.getfile(cls)
+        cls_name = os.path.basename(cls_name)[:-3]
+        return cls_name
 
     @property
     def allows_failure(self) -> bool:

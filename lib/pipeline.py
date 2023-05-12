@@ -11,6 +11,7 @@ class Pipeline:
         self.current_test_name : Optional[str] = None
         self.all_pipes : list[tuple[str, list[Stage]]] = []
         self.stages = stages
+        self.config : dict = {}
         Pipeline.INSTANCE = self
 
     @staticmethod
@@ -23,13 +24,20 @@ class Pipeline:
         stage = self.stages[name](self, config)
         return stage
 
+    def stage_config(self, stage: Stage):
+        return self.config.get(stage.class_name(), {})
+
     def execute(self):
         with open(self.config_path, 'r') as fp:
             config = yaml.safe_load(fp)
 
         assert config.get('version') == 2, 'Unsupported version'
 
-        # Start every stage at class level to prepare setup if any is needed. 
+        # Load global config, if any, and verify that each item is a valid Stage name.
+        self.config = config.get('config', {})
+        assert all(key in self.stages for key in self.config), "Invalid config provided"
+
+        # Start every stage at class level to prepare setup if any is needed.
         for stage in self.stages.values():
             stage.start()
 

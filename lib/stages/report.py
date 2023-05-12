@@ -3,6 +3,8 @@ from .. import stage
 from ..pipeline import Pipeline
 from ..plugins import report_plugin
 
+from pprint import pprint
+
 class Stage(stage.Stage):
     all_outputs = {}
 
@@ -17,6 +19,11 @@ class Stage(stage.Stage):
 
     @classmethod
     def on_pipeline_created(cls):
+        test_name = Pipeline.instance().current_test_name
+        config = Pipeline.instance().stage_config(cls)
+        if test_name in config.get('skip', []):
+            return
+
         plugin = report_plugin.Plugin(Pipeline.instance(), None)
 
         for stg in Pipeline.instance().current_stages:
@@ -37,4 +44,4 @@ class Stage(stage.Stage):
     @classmethod
     def finish(cls):
         print(f'Building HTML report for pipe {Pipeline.instance()}')
-        print(Stage.all_outputs)
+        pprint(Stage.all_outputs)

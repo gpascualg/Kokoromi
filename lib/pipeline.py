@@ -25,7 +25,6 @@ class Pipeline:
         # Config is based on test config with local overrides.
         config = copy.deepcopy(test_config.get(name, {}))
         config.update(stage_info[name] or {})
-        print(stage_info)
 
         # Create and done.
         stage = self.stages[name](self, config)

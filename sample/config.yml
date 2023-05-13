@@ -14,7 +14,10 @@ config:
       - Simple
   
   visualizer:
-     enabled: false 
+    enabled: false
+
+  logger:
+    level: error
 
 tests:
   Some app with 2phase:

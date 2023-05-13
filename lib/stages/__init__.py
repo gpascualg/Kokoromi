@@ -2,6 +2,7 @@ import sys
 
 from . import appium
 from . import autoconf
+from . import logger
 from . import obfuscator
 from . import python
 from . import report

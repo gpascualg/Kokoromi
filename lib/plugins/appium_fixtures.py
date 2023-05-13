@@ -2,6 +2,7 @@ from appium import webdriver
 import pytest
 
 from ..pipeline import Pipeline
+from ..utils.phase_report_key import phase_report_key
 
 @pytest.fixture(autouse=True, scope='class')
 def _setup_appium_resources(request):
@@ -22,3 +23,12 @@ def _setup_appium_resources(request):
     assert request.cls.driver, "No driver could be built"
     yield
     request.cls.driver.close()
+
+@pytest.fixture(autouse=True)
+def _callbacks_appium(request):
+    yield
+
+    assert phase_report_key in request.node.stash, request.node.report_call
+    report = request.node.stash[phase_report_key]
+    if report['call'].failed:
+        request.cls.on_failed(report, request)

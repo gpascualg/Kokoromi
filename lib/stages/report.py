@@ -1,9 +1,10 @@
 from __future__ import annotations
+import logging
+import subprocess
+
 from .. import stage
 from ..pipeline import Pipeline
 from ..plugins import report_plugin
-
-from pprint import pprint
 
 class Stage(stage.Stage):
     all_outputs = {}
@@ -43,5 +44,6 @@ class Stage(stage.Stage):
 
     @classmethod
     def finish(cls):
-        print(f'Building HTML report for pipe {Pipeline.instance()}')
-        pprint(Stage.all_outputs)
+        # Merge all html reports into a single one.
+        logging.debug(f'Building HTML report for pipe {Pipeline.instance()}')
+        subprocess.check_call(['pytest_html_merger', '-i', 'reports', '-o', 'report.html'])
